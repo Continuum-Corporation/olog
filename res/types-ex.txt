@@ -1,0 +1,33 @@
+### Positive Examples of Types
+
+1. **Type: "a city"**
+   - **Valid because**: It is a singular, indefinite noun phrase, representing a general class of entities (cities) without specifying any particular instance.
+
+2. **Type: "an electric car"**
+   - **Valid because**: This type is specific yet general enough to include any instance of an electric car, embodying the concept without limiting to specific examples.
+
+3. **Type: "a piece of classical music"**
+   - **Valid because**: It appropriately categorizes a broad range of items (pieces of classical music) while remaining nonspecific about individual instances.
+
+4. **Type: "a mathematical equation"**
+   - **Valid because**: It covers the entire class of mathematical equations in a singular, indefinite form, allowing for a wide range of specific examples.
+
+5. **Type: "a historical event"**
+   - **Valid because**: The type is inclusive of any event classified as historical, without confining to particular events, thus being abstract yet identifiable.
+
+### Negative Examples of Types
+
+1. **Type: "The Eiffel Tower"**
+   - **Invalid because**: It specifies a unique, singular entity. Types should represent a class of items, not a specific instance.
+
+2. **Type: "Trees"**
+   - **Invalid because**: The plural form is used. Types should be singular to represent the class as a whole ("a tree").
+
+3. **Type: "Some interesting books"**
+   - **Invalid because**: The phrase is vague and subjective ("interesting" is not a clear, objective criterion), and the use of "some" makes it indefinite in number.
+
+4. **Type: "Water" (as a mass noun)**
+   - **Invalid because**: As a mass noun, it doesn’t fit into the singular, countable form. It should be rephrased as "a quantity of water" or "a liter of water".
+
+5. **Type: "Red" (referring to the color)**
+   - **Invalid because**: It is an adjective and not a noun phrase. It should be transformed into a noun phrase such as "a shade of red" to be a valid type.

@@ -1,25 +1,45 @@
-Interpreting documents and translating them into ologs represented in JSON format requires a systematic approach that respects the structure and semantics of both the source documents and the target olog format. The following instructions aim to guide this process effectively:
+### Detailed Guidelines for Language Models Creating Types and Aspects in Ologs
 
-Detailed Concept Identification: Go beyond surface-level concepts to identify nuanced and specific concepts within the source material. Each concept should be captured as a type, using singular, descriptive noun phrases.
+#### Types
 
-Explicit Relationship Mapping: Clearly define relationships between concepts. Each aspect should unambiguously describe the nature of the relationship, using verbs or verb phrases that precisely capture the interaction or connection between types.
+1. **Use Singular and Indefinite Forms**: Always phrase a type as a singular indefinite noun phrase (e.g., "a car", not "cars" or "the car"). This helps in generalizing the type to represent a class of entities.
 
-Hierarchy and Subtyping: Develop a hierarchical structure where broader concepts encompass specific sub-concepts. This structure should reflect the natural categorization within the domain of the olog.
+2. **Focus on Intent, Not Instances**: Define types by their conceptual essence rather than listing examples. This approach allows for a broader and more flexible understanding of the type.
 
-Functional Relationship Verification: Ensure that each aspect represents a functional relationship, where each instance of the source type is uniquely related to an instance of the target type.
+3. **Ensure Readability in Text Integration**: When types are embedded in text, use concise and clear symbolic representations to maintain flow and readability.
 
-Commutative Diagram Clarity: When defining facts, ensure that commutative diagrams are clearly depicted and the relationships they represent are explicitly stated. This clarifies how different paths in the olog are related.
+4. **Transforming Mass and Proper Nouns**: Convert mass nouns into countable forms using units or standard measures. Generalize proper nouns into a class (e.g., "a person named John" instead of "John").
 
-Rich Instance Specification: Define instances with sufficient detail. Beyond just naming instances, provide context or attributes where necessary to clarify their role within the types.
+5. **Handle Singletons with Caution**: Avoid creating types that represent single, indivisible entities. If necessary, present them as classes that can potentially include multiple instances or interpretations.
 
-Semantic Enrichment: Enhance the semantics of types and aspects with detailed descriptions or examples. This step is crucial for ensuring that the intended meaning is conveyed clearly.
+6. **Clarify Compound Structures**: In types representing compound structures, explicitly declare all constituent elements and their relationships to prevent confusion.
 
-Directionality and Dynamics: Clearly indicate the directionality of relationships and consider the dynamic or temporal aspects of the concepts where relevant. This is particularly important for concepts that change over time or have a directional flow.
+7. **Make Implicit Assumptions Explicit**: For types that might carry implicit assumptions (like uniqueness or exclusivity), explicitly state these assumptions in the type’s definition.
 
-Complexity and Depth: Avoid oversimplification. Acknowledge and represent the complexities and nuances inherent in the concepts being modeled.
+8. **Adaptable Representation**: Be flexible in representing types, using nicknames or abbreviations where appropriate, but without sacrificing clarity or accuracy.
 
-Coherence and Consistency Check: Regularly review the olog for overall coherence and consistency. Ensure that each part contributes meaningfully to the whole and that the olog accurately represents the conceptual framework of the domain.
+9. **Define Well-Delineated Sets**: Types should represent clearly defined and distinguishable sets of entities, as perceived by the creator of the olog.
 
-Iterative Refinement: Treat olog creation as an iterative process. Continuously refine and update the olog as new insights are gained or as the domain evolves.
+10. **Uniform Labeling Approach**: Adopt a consistent labeling scheme for types throughout the olog to aid in coherence and comprehension.
 
-Format-Specific Adaptation: When translating the olog into formats like JSON, adapt the structure to fit the format while preserving the integrity and relationships of the original olog.
+#### Aspects
+
+1. **Represent Functional Relationships Only**: Ensure aspects represent functional relationships where each source instance uniquely determines a target instance. Avoid relationships that are ambiguous or multi-valued.
+
+2. **Start Labels with Verbs**: Aspect labels should begin with a verb to clearly indicate the action or relation (e.g., "has", "contains", "is").
+
+3. **Construct Coherent Sentences**: The combination of source type, aspect label, and target type should form a meaningful and grammatically correct sentence.
+
+4. **Enforce One-to-One Mapping**: Each instance in the source type should correspond to exactly one instance in the target type, maintaining the functional nature of the aspect.
+
+5. **Reformulate Non-functional Relationships**: For non-functional relations, consider rephrasing them into functional aspects or representing them using sets and Cartesian products.
+
+6. **Explicitly Depict Relations**: Clearly represent the elements and connections in a relation, particularly when it involves complex or compound structures.
+
+7. **Adapt to Context**: Tailor aspect labels and representations to fit the specific context, ensuring they accurately convey the intended meaning.
+
+8. **Utilize Graphs for Complex Functions**: For multifaceted or intricate functional relationships, use graphical representations to aid in clarity and understanding.
+
+9. **Consistency in Structure and Labeling**: Maintain a uniform approach in structuring and labeling aspects throughout the olog for consistency and ease of interpretation.
+
+10. **Clear Path Narratives**: When constructing paths through an olog, use transitional phrases like "which leads to" or "resulting in" to ensure clarity and logical flow in the narrative.

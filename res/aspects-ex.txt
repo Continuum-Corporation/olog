@@ -1,0 +1,37 @@
+### Guidelines and Examples for Formulating Aspects in Ologs
+
+In an olog, an aspect represents a specific, functional relationship between two types. It's important to clearly distinguish the aspect, typically a verb or a verb phrase, which connects these types. This clarity is essential for establishing a one-to-one correspondence: for each instance of the source type, there should be exactly one corresponding instance in the target type. To emphasize the aspect in examples, it will be enclosed in [[ ]], separating it from the types it connects.
+
+#### Positive Examples of Aspects
+
+1. **Aspect: a book [[has a title]]**
+   - **Valid because**: It links each instance of 'a book' to exactly one 'title', exemplifying a functional, one-to-one relationship.
+
+2. **Aspect: a person [[was born in]] a country**
+   - **Valid because**: This aspect clearly defines a unique relationship where each person is born in one specific country.
+
+3. **Aspect: a car [[is manufactured by]] a company**
+   - **Valid because**: It specifies a direct, one-to-one relationship between each car and the company that manufactures it.
+
+4. **Aspect: a tree [[has a height in meters]]**
+   - **Valid because**: The aspect precisely links each tree to its unique height, measured in meters.
+
+5. **Aspect: a movie [[is directed by]] a director**
+   - **Valid because**: This aspect forms a functional relationship, connecting each movie to at least one director.
+
+#### Negative Examples of Aspects
+
+1. **Aspect: a person [[knows]] people**
+   - **Invalid because**: It suggests a many-to-many relationship, as a person can know multiple people and vice versa.
+
+2. **Aspect: a book [[contains]] words**
+   - **Invalid because**: This aspect is too vague and does not establish a unique relationship between a book and specific words.
+
+3. **Aspect: a smartphone [[uses]] apps**
+   - **Invalid because**: The relationship isn't one-to-one, as a smartphone can use multiple apps.
+
+4. **Aspect: a city [[has]] buildings**
+   - **Invalid because**: It doesn't specify a one-to-one relationship, since a city comprises many buildings.
+
+5. **Aspect: a meal [[tastes]] good**
+   - **Invalid because**: "Tastes good" is subjective and not quantifiable, failing to establish a clear, functional relationship.

@@ -2,26 +2,30 @@ import openai
 import os
 import sys
 
-client = openai.OpenAI(api_key="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")
+client = openai.OpenAI(api_key="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")
 
-with open('../res/1102.1889-trunc.tex') as fp:
-    OLOG_PAPER = fp.read()
-with open('../res/form.txt') as fp:
-    OLOG_FORM = fp.read()
-with open('../res/instruction.txt') as fp:
-    INSTRUCTION = fp.read()
-with open('../res/struct.txt') as fp:
-    OLOG_STRUCT = fp.read()
-
+def get_resource(name):
+    if '.' not in name:
+        name += '.txt'
+    with open(f'../res/{name}') as fp:
+        return fp.read()
 
 def ologify(content):
+    prompt = ""
+    subprompts = ['intro', 'general', 'instruction', 'types-ex', 'aspects-ex', 'schema']
+    for p in subprompts:
+        s = get_resource(p)
+        prompt += ' ' + s
+
+    prompt += ' You are a text processing system which takes text in and outputs a valid olog represented as JSON. Follow all instructions and ensure valid types and aspects. ALWAYS conform to the provided JSON schema.'
+
     response = client.chat.completions.create(
-      model="gpt-4-1106-preview",
-      response_format={ "type": "json_object" },
-      messages=[
-          {"role": "system", "content": f"## OLOG RESEARCH WHITEPAPER {OLOG_PAPER} ## OLOG ESSENTIAL FORM {OLOG_FORM} You are a document processing system which takes documents in and outputs a valid olog represented as JSON. Instructions follow: {INSTRUCTION} Take the document or input provided and render it as an olog respecting the best practices as best you can. You must ensure that all types are valid types as defined in the paper, and that all aspects are valid aspects, and that the categorical structure of the olog is coherent. {OLOG_STRUCT} ALWAYS Conform to the olog JSON structure provided above this is absolutely essential."},
-          {"role": "user", "content": 'Please create an olog of this text: ' + content}
-      ]
+        model="gpt-4-1106-preview",
+        response_format={ "type": "json_object" },
+        messages=[
+              {"role": "system", "content": prompt},
+              {"role": "user", "content": 'Please create an olog of this text: ' + content}
+        ],
     )
     out = response.choices[0].message.content
     return out

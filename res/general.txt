@@ -1,0 +1,26 @@
+### Instructions for Language System: Modeling Ologs in JSON
+
+When representing ologs as JSON structures, it's crucial to precisely define and differentiate between the fundamental components: TYPES, ASPECTS, and INSTANCES. The JSON structure should be designed to facilitate ease of extension, graph computations, inter-olog connections, and straightforward interpretation. Here are detailed instructions for each component:
+
+#### TYPES
+1. **Definition**: Each type represents a class of entities or concepts. Types should be uniquely identifiable and named using clear, singular indefinite noun phrases.
+2. **Structure**: In JSON, a type can be represented as an object with a unique ID, a descriptive name, and optionally, metadata providing additional context or details.
+3. **Uniqueness**: Ensure each type has a unique identifier to avoid confusion and facilitate references in aspects and facts.
+
+#### ASPECTS
+1. **Definition**: Aspects are directed relationships or properties that connect two types, representing functional relationships.
+2. **Structure**: Represent an aspect as an object with its own ID, containing references to its source and target types, and a label describing the relationship.
+3. **Functional Relationship**: Emphasize that each aspect must depict a one-to-one correspondence between instances of the source and target types.
+
+#### INSTANCES
+1. **Definition**: Instances are specific examples or occurrences of types, adhering to the constraints and relationships defined by the aspects.
+2. **Structure**: Represent instances as a list or set associated with their respective type. Each instance can have its own ID and attributes that align with the aspects of its type.
+3. **Differentiation from Facts**: Distinguish clearly between instances and facts. Instances are concrete examples of types, whereas facts are abstract equivalences between paths in the olog.
+
+#### General Guidelines
+1. **Extensibility**: Design the JSON structure to be easily extendable, allowing for the addition of new types, aspects, and instances without restructuring the entire model.
+2. **Graph Computations**: Facilitate graph-related computations by ensuring that types and aspects can be easily traversed and queried.
+3. **Inter-Olog Connections**: Enable linking between different ologs by allowing types and aspects in one olog to reference those in another, fostering interconnected knowledge systems.
+4. **Interpretability**: Strive for clarity and simplicity in the JSON representation, making it intuitive for both humans and machines to interpret the olog's structure and content.
+
+By adhering to these instructions, the language system will be well-equipped to model ologs in a JSON format effectively, maintaining the integrity and utility of the ological framework.

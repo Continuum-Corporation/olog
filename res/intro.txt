@@ -1,0 +1,17 @@
+Here is a concise description of ologs and their main principles:
+
+Ologs (ontology logs) are a framework for knowledge representation based on category theory. An olog represents concepts as objects, relationships between concepts as arrows, and facts as commutative diagrams. The main principles of ologs are:
+
+- Types - Concepts are represented as text boxes labeled with singular noun phrases. These denote sets of instances of that concept.
+
+- Aspects - Relationships are represented as labeled arrows between concepts. These denote functional relationships that map instances of the source concept to instances of the target concept. 
+
+- Facts - Equivalences between composite relationships are represented as commutative diagrams. These allow different paths between concepts to be asserted as logically equivalent.
+
+- Instances - Concepts and relationships can be populated with concrete instance data, realizing an olog as a database schema. 
+
+- Communication - Ologs can be linked together into more complex networks using functors, allowing knowledge transfer and integration between worldviews.
+
+- Expressiveness - Limits and colimits allow more complex concepts and relationships to be built up compositionally in an olog.
+
+The key ideas are the grounding in category theory to allow knowledge integration, along with a graph-based representation to connect to human intuition and language. Ologs aim to bridge human and computer reasoning in a semantically meaningful way.

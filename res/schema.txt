@@ -1,0 +1,31 @@
+{
+  "Olog": {
+    "Types": [
+      {
+        "ID": "Unique identifier for the type",
+        "Name": "Descriptive name of the type",
+        "Description": "Optional detailed description of the type",
+        "Instances": [
+          {
+            "ID": "Unique identifier for the instance",
+            "Attributes": {
+              "AttributeName": "AttributeValue",
+              // More attributes as needed
+            }
+          },
+          // More instances as needed
+        ]
+      },
+      // More types as needed
+    ],
+    "Aspects": [
+      {
+        "ID": "Unique identifier for the aspect",
+        "Label": "Description of the relationship",
+        "Source": "ID of the source type",
+        "Target": "ID of the target type"
+      },
+      // More aspects as needed
+    ]
+  }
+}
