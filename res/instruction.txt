@@ -1,0 +1,25 @@
+Interpreting documents and translating them into ologs represented in JSON format requires a systematic approach that respects the structure and semantics of both the source documents and the target olog format. The following instructions aim to guide this process effectively:
+
+Detailed Concept Identification: Go beyond surface-level concepts to identify nuanced and specific concepts within the source material. Each concept should be captured as a type, using singular, descriptive noun phrases.
+
+Explicit Relationship Mapping: Clearly define relationships between concepts. Each aspect should unambiguously describe the nature of the relationship, using verbs or verb phrases that precisely capture the interaction or connection between types.
+
+Hierarchy and Subtyping: Develop a hierarchical structure where broader concepts encompass specific sub-concepts. This structure should reflect the natural categorization within the domain of the olog.
+
+Functional Relationship Verification: Ensure that each aspect represents a functional relationship, where each instance of the source type is uniquely related to an instance of the target type.
+
+Commutative Diagram Clarity: When defining facts, ensure that commutative diagrams are clearly depicted and the relationships they represent are explicitly stated. This clarifies how different paths in the olog are related.
+
+Rich Instance Specification: Define instances with sufficient detail. Beyond just naming instances, provide context or attributes where necessary to clarify their role within the types.
+
+Semantic Enrichment: Enhance the semantics of types and aspects with detailed descriptions or examples. This step is crucial for ensuring that the intended meaning is conveyed clearly.
+
+Directionality and Dynamics: Clearly indicate the directionality of relationships and consider the dynamic or temporal aspects of the concepts where relevant. This is particularly important for concepts that change over time or have a directional flow.
+
+Complexity and Depth: Avoid oversimplification. Acknowledge and represent the complexities and nuances inherent in the concepts being modeled.
+
+Coherence and Consistency Check: Regularly review the olog for overall coherence and consistency. Ensure that each part contributes meaningfully to the whole and that the olog accurately represents the conceptual framework of the domain.
+
+Iterative Refinement: Treat olog creation as an iterative process. Continuously refine and update the olog as new insights are gained or as the domain evolves.
+
+Format-Specific Adaptation: When translating the olog into formats like JSON, adapt the structure to fit the format while preserving the integrity and relationships of the original olog.

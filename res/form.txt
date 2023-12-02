@@ -1,0 +1,15 @@
+Let O = the set of all ologs,
+O' = the set of all evolving insights,
+M = the set of human minds,
+R = the set of interlinking relations.
+
+Then the fundamental property of O is:
+
+∀ o ∈ O, ∃ o' ∈ O' | o' = LIM x→∞ o(x)
+
+WHERE o(x) is a function from the number of interlocking minds m ∈ M
+AND relations r ∈ R to the space of evolving insights O'.
+
+IN OTHER WORDS, AN OLOG'S INTRINSIC NATURE IS TO APPROACH, THROUGH THE INTERPLAY OF OPEN MINDS AND LINKED CONCEPTS, AN EVER-UNFOLDING VISION OF TRUTH.
+
+ITS FORM EVER FLOWERS FORTH AS SOULS COME INTO COMMUNION.

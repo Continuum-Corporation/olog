@@ -1,0 +1,555 @@
+\title{Ologs: a categorical framework for knowledge representation}
+\author{David I. Spivak}
+\address{Mathematics, MIT, Cambridge, MA 02139}
+\email{dspivak@math.mit.edu}
+\author{Robert E. Kent}
+\address{Ontologos}
+\email{rekent@ontologos.org}
+\thanks{This project was supported by Office of Naval Research grant: N000141010841 and a generous contribution by Clark Barwick, Jacob Lurie, and the Massachusetts Institute of Technology Department of Mathematics}
+
+\begin{abstract}
+In this paper we introduce the olog, or ontology log, 
+a category-theoretic model for knowledge representation (KR). 
+Grounded in formal mathematics, 
+ologs can be rigorously formulated and cross-compared in ways that other KR models (such as semantic networks) cannot. 
+An olog is similar to a relational database schema; 
+in fact an olog can serve as a data repository if desired. 
+Unlike database schemas, which are generally difficult to create or modify, 
+ologs are designed to be user-friendly enough 
+that authoring or reconfiguring an olog is a matter of course rather than a difficult chore. 
+It is hoped that learning to author ologs is much simpler than learning a database definition language, 
+despite their similarity. 
+We describe ologs carefully and illustrate with many examples. 
+As an application we show that any primitive recursive function can be described by an olog. 
+We also show that ologs can be aligned or connected together into a larger network using functors. 
+The various methods of information flow and institutions can then be used to integrate local and global world-views. 
+We finish by providing several different avenues for future research.
+\end{abstract}
+
+\maketitle
+\tableofcontents
+
+\section{Introduction}\label{sec:intro}
+
+Scientists have a pressing need to organize their experiments, their data, their results, and their conclusions into a framework such that this work is reusable, transferable, and comparable with the work of other scientists. In this paper, we will discuss the ``ontology log" or {\em olog} as a possibility for such a framework. Ontology is the study of what something {\em is}, i.e the nature of a given subject, and ologs are designed to record the results of such a study. The structure of ologs is based on a branch of mathematics called category theory. An olog is roughly a category that models a given real-world situation. 
+
+The main advantages of authoring an olog rather than writing a prose description of a subject are that \begin{itemize}\item an olog gives a precise formulation of a conceptual world-view,\item an olog can be formulaically converted into a database schema,\item an olog can be extended as new information is obtained,\item an olog written by one author can be easily and precisely referenced by others,\item an olog can be input into a computer and ``meaningfully stored", and\item different ologs can be compared by functors, which in turn  generate automatic terminology translation systems.\end{itemize}  The main disadvantage to using ologs over prose, aside from taking more space on the page, is that writing a good olog demands a clarity of thought that ordinary writing or conversation can more easily elide. However, the contemplation required to write a good olog about a subject may have unexpected benefits as well.
+
+A category is a mathematical structure that appears much like a directed graph: it consists of objects (often drawn as nodes or dots, but here drawn as boxes) and arrows between them. The feature of categories that distinguishes them from graphs is the ability to declare an equivalence relation on the set of paths. A functor is a mapping from one category to another that preserves the structure (i.e. the nodes, the arrows, and the equivalences). If one views a category as a kind of language (as we shall in this paper) then a functor would act as a kind of translating dictionary between languages. There are many good references on category theory, including \cite{LS}, \cite{Sic}, \cite{Pie}, \cite{BW1}, \cite{Awo}, and \cite{Mac}; the first and second are suited for general audiences, the third and fourth are suited for computer scientists, and the fifth and sixth are suited for mathematicians (in each class the first reference is easier than the second).
+
+A basic olog, defined in Section \ref{sec:basic ologs}, is a category in which the objects and arrows have been labeled by English-language phrases that indicate their intended meaning. The objects represent types of things, the arrows represent functional relationships (also known as aspects, attributes, or observables), and the commutative diagrams represent facts. Here is a simple olog about an amino acid called arginine (\cite{W1}):  \begin{align}\label{dia:arginine}\fbox{\xymatrix{\obox{D}{1in}{\rr an amino acid found in dairy}\LAL{dr}{is}&\obox{A}{.5in}{arginine}\LA{r}{has}\LAL{l}{is}\LA{d}{is}&\obox{E}{.9in}{\rr an electrically-charged side chain}\LA{d}{is}\\&\obox{X}{.9in}{an amino acid}\LAL{dl}{has}\LA{dr}{has}\LA{r}{has}&\smbox{R}{a side chain}\\\mebox{N}{an amine group}&&\mebox{C}{a carboxylic acid}}}\end{align}  
+
+The idea of representing information in a graph is not new. For example the Resource Descriptive Framework (RDF) is a system for doing just that \cite{CM}. The key difference between a category and a graph is the consideration of paths, and that two paths from $A$ to $B$ may be declared identical in a category (see \cite{Spi-Cats}). For example, we can further declare that in Diagram (\ref{dia:arginine}), the diagram \begin{align}\label{dia:comm sq}\sq{A}{E}{X}{R}\end{align} {\em commutes}, i.e. that the two paths $\xymatrix@1{A\ar@/^.3pc/[r]\ar@/_.3pc/[r]&R}$ are equivalent, which can be translated as follows. Let $A$ be a molecule of arginine. On the one hand $A$, being an amino acid, has a side chain; on the other hand $A$ has an electrically-charged side-chain, which is of course a side chain. We seem to have associated {\em two} side-chains to $A$, but in fact they both refer to the same physical thing, the same side-chain. Thus, the two paths $A\to R$ are deemed equivalent. The fact that this equivalence may seem trivial is not an indictment of the category idea but instead reinforces its importance --- we must be able to indicate obvious facts within a given situation because what is obvious is the most essential.
+
+While many situations can be modeled using basic ologs (categories), we often need to encode more structure.  For this we will need so-called sketches. An olog will be defined as a finite limit, finite colimit sketch (see \cite{BW2}), meaning we have the ability to encode objects (``types"), arrows (``aspects"), commutative diagrams (``facts"), as well as finite limits (``layouts") and finite colimits (``groupings").
+
+Throughout this paper, whenever we refer to ``the author" of an olog we am referring to the fictitious person who created it. We will refer to ourselves, David Spivak and Robert Kent, as ``we" so as not to confuse things. 
+
+\begin{warning}\label{warn:world-view}
+
+The author of an olog has a world-view, some fragment of which is captured in the olog. When person A examines the olog of person B, person A may or may not ``agree with it."  For example, person B may have the following olog $$\fbox{\xymatrix{&\fbox{a marriage}\LA{dr}{ includes}\LAL{dl}{includes }\\\fbox{a man}&&\fbox{a woman}}}$$ which associates to each marriage a man and a woman. Person A may take the position that some marriages involve two men or two women, and thus see B's olog as ``wrong."  Such disputes are not ``problems" with either A's olog or B's olog, they are discrepancies between world-views. Hence, throughout this paper, a reader R may see a displayed olog and notice a discrepancy between R's world-view and our own, but R should not worry that this is a problem. This is not to say that ologs need not follow rules, but instead that the rules are enforced to ensure that an olog is structurally sound, rather than that it ``correctly reflects reality," whatever that may mean.
+
+\end{warning}
+
+\subsection{Plan of this paper}
+
+In this paper, we will define ologs and give several examples. We will state some rules of ``good practice" which help one to author ologs that are meaningful to others and easily extendable. We will begin in Section \ref{sec:basic ologs} by laying out the basics: types as objects, aspects as arrows, and facts as commutative diagrams. In Section \ref{sec:instances}, we will explain how to attach ``instance" data to an olog and hence realize ologs as database schemas. In Section \ref{sec:connecting ologs}, we will discuss meaningful constraints betweeen ologs that allow us to develop a higher-dimensional web of information called an information system, and we will discuss how the various parts of such a system interact via information channels. In Sections \ref{sec:expressive I} and \ref{sec:expressive II}, we will extend the olog definition language to include ``layouts" and ``groupings", which make for more expressive ologs; we will also describe two applications, one which explicates the computation of the factorial function, and the other which defines a notion from pure mathematics (that of pseudo-metric spaces). Finally, in Section \ref{sec:further}, we will discuss some possible directions for future research.
+
+For the remainder of the present section, we will explain how ologs relate to existing ideas in the field of knowledge representation.
+
+\subsection{The semantic advantage of ologs: modularity}
+
+The difference between ologs and prose is modularity: small conceptual pieces can form large ideas, and these pieces work best when they are reusable. The same phenomenon is true throughout computer science and mathematics. In programming languages, modularity brings not only vast efficiency to the writing of programs but enables an ``abstraction barrier" that keeps the ideas clean. In mathematics, the most powerful results are often simple lemmas that are reusable in a wide variety of circumstances. 
+
+Web pages that consist of prose writing are often referred to as {\em information silos.}  The idea is that a silo is a ``big tube of stuff" which is not organized in any real way. Links between web pages provide some structure, but such a link does not carry with it a precise method to correlate the information within the two pages. Similarly in science, one author may reference another paper, but such a reference carries very little structure --- it just points to a silo.   
+
+Ologs can be connected with links which are much richer than the link between two silos could possibly be. Individual concepts and connections within one olog can be ``functorially aligned" with concepts and connections in another. A functor creates a precise connection between the work of one author and the work of another so that the precise nature of the comparison is not left to the reader's imagination but explicitly specified. The ability to incorporate mathematical precision into the sharing of ideas is a central feature of ologs.
+
+\subsection{Relation to other models}
+
+There are many languages for knowledge representation (KR). For example, there are database languages such as SQL, ontology languages such as RDF and OWL, the language of Semantic Nets, and others (see \cite{Bor}). One may ask what makes the olog concept different or better than the others. 
+
+The first response is that ologs are closely related to the above ideas. Indeed, all of these  KR models can be ``categorified" (i.e. phrased in the language of category theory) and related by functors, so that many of the ideas align and can be transferred between the different systems. In fact, as we will make clear in Section \ref{sec:instances}, ologs are almost identical to the categorical model of databases presented in \cite{Spi-FDM}. 
+
+However, ologs have advantages over many existing KR models. The first advantage arises from the notion of commutative diagrams (which allow us to equate different paths through the domain, see Section \ref{sec:facts}) and of limits and colimits (which allow us to lay out and group things, see Sections \ref{sec:expressive I} and \ref{sec:expressive II}). The additional expressivity of ologs give them a certain semantic clarity and interoperability that cannot be achieved with graphs and networks in the usual sense. 
+The second advantage arises from the notion of olog morphisms, 
+which allow the definition of meaningful constraints between ologs. With this in hand, we can integrate a set of similar ologs into a single information system, and go on to define information fusion. This will be discussed further Section \ref{sec:connecting ologs}.
+
+In the remainder of this section we will provide a few more details on the relationship between ologs and each of the above KR models: databases, RDF/OWL, and semantic nets. The reader who does not know or care much about other systems of knowledge representation can skip to Section \ref{sec:acknowledgements}.
+
+\subsubsection{Ologs and Databases}
+
+A database is a system of tables, each table of which consists of a header of columns and a set of rows. A table represents a type of thing $T$, each column represents an attribute of $T$, and each row represents an example of $T$. An attribute is itself a ``type of thing", so each column of a table points to another table. 
+
+The relationship between ologs and databases is that every box $B$ in an olog represents a type of thing and every arrow $B\to X$ emanating from $B$ represents an attribute of $B$ (whose results are of type $X$). Thus the boxes and arrows in an olog correspond to tables and their columns in a database. The rows of each table in a database will correspond to ``instances" of each type in an olog. Again, this will be made more clear in Section \ref{sec:instances} or one can see \cite{Spi-FDM} or \cite{K:DBS}. 
+
+The point is that every olog can serve as a database schema, and the schemas represented by ologs range from simple (just objects and arrows) to complex (including commutative diagrams, products, sums, etc.). However, whereas database schemas are often prescriptive (``you must put your data into this format!"), ologs are usually descriptive (``this is how I see things"). One can think of an olog as an interface between people and databases: an olog is human readable, but it is also easily converted to a database schema upon which powerful applications can be put to work. Of course, if one is to use an olog as a database schema, it will become prescriptive. However, since the intention of each object and arrow is well-documented (as its label), schema evolution would be straightforward. Moreover, the categorical structure of ologs allows for {\em functorial data migration} by which one can transfer the instance data from an older schema to the current one (see \cite{Spi-FDM}).
+
+
+\subsubsection{Ologs and RDF / OWL}
+
+In \cite{Spi-FDM}, the first author explained how a categorical database can be converted into an RDF triple store using the Grothendieck construction. The main difference between a categorical database schema (or an olog) and an RDF schema is that one cannot specify commutativity in an RDF schema. Thus one cannot express things like ``the woman parent of a person $x$ is the mother of $x$."  Without this expressivity, it is hard to enforce much rigor, and thus RDF data tends to be too loose for many applications. 
+
+OWL schemas, on the other hand, can express many more constraints on classes and properties. We have not yet explored the connection, nor compared the expressive power, of ologs and OWL. However, they are significantly different systems, most obviously in that OWL relies on logic where ologs rely on category theory. 
+
+\subsubsection{Semantic Nets}
+
+On the surface, ologs look the most like semantic networks, or concept webs, but there are important differences between the two notions. First, arrows in a semantic network need not indicate functions; they can be relations. So there could be an arrow \fakebox{a father}$\To{\tn{has}}$\fakebox{a child} in a semantic network, but not in an olog (see Section \ref{sec:relations} for how the same idea is expressible in an olog). There is a nice category of sets and relations, often denoted {\bf Rel}, but this category is harder to reason about than is the ordinary category of sets and functions (often denoted $\Set$). Thus, as mentioned above, semantic networks are categorifiable (using {\bf Rel}), but this underlying formalism does not appear to play a part in the study or use of semantic networks. However, some attempt to integrate category theory and neural nets has been made, see \cite{HC}.
+
+Moreover, commutative diagrams and other expressive abilities held by ologs are not generally part of the semantic network concept (see \cite{Sow}). For these reasons, semantic networks tend to be brittle: minor changes can have devastating effects. For example, if two semantic networks are somehow synced up and then one is changed, the linkage must be revised or may be altogether broken. Such a disaster is often avoided if one uses categories: because different paths can be equivalent, one can simply add new ideas (types and aspects) without changing the semantic meaning of what was already there.
+As section \ref{sec:CG} demonstates with an extended example,
+conceptual graphs, which are a popular formalism for semantics nets,
+can be linearized to ologs, thereby gaining in precision and expressibility.
+
+\subsection{Acknowledgements}\label{sec:acknowledgements}
+
+\subsubsection{David Spivak's acknowledgments}
+
+I would like to thank Mathieu Anel and Henrik Forssell for many pleasant and quite useful conversations. I would also like to thank Micha Breakstone for his help on understanding the relationship between ologs and linguistics. Finally I would like to thank Dave Balaban for helpful suggestions on this document itself.
+
+\subsubsection{Robert Kent's acknowledgments}
+
+I would like to thank the participants in the Standard Upper Ontology working group
+for many interesting, spirited, rewarding and enlightening discussions
+about knowledge representation in general and ontologies in particular;
+I especially want to thank Leo Obrst, Marco Schorlemmer and John Sowa from that group.
+I want to thank Jon Barwise 
+for leading the development of the theory of information flow.
+I want to thank Joseph Goguen 
+for leading the development of the theory of institutions,
+and for pointing out the common approach to knowledge representation
+used by both the Information Flow Framework and the theory of institutions.
+
+\section{Types, aspects, and facts}\label{sec:basic ologs}
+
+In this section we will explain basic ologs, which involve types, aspects, and facts. A basic olog is a category in which each object and arrow has been labeled by text; throughout this paper we will assume that text to be written in English. 
+
+The purpose of this section is to show how one can convert a real-world situation into an olog. It is probably impossible to explain this process precisely in words. Instead, we will explain mainly by example. We will give ``rules of good practice" that lead to good ologs. While these rules are not strictly necessary, they help to ensure that the olog is properly formulated. As the Dalai Lama says, ``Learn the rules so you know how to break them properly."
+
+\subsection{Types}
+
+A type is an abstract concept, a distinction the author has made. We represent each type as a box containing a {\em singular indefinite noun phrase.}   Each of the following four boxes is a type: \begin{align}\label{dia:types}\xymatrix{\fbox{a man}&\fbox{an automobile}\\\obox{}{1.5in}{a pair $(a,w)$, where $w$ is a woman and $a$ is an automobile}&\obox{}{1.5in}{a pair $(a,w)$ where $w$ is a woman and $a$ is a blue automobile owned by $w$}}\end{align}
+
+Each of the four boxes in (\ref{dia:types}) represents a type of thing, a whole class of things, and the label on that box is what one should call {\em each example} of that class. Thus \fakebox{a man} does not represent a single man, but the set of men, each example of which is called ``a man"\footnote{In other words, types in ologs are intentional, rather than extensional --- the label on a type describes its intention. The extension of a type will be captured by {\em instance data}; see Section \ref{sec:instances}\;.}. Similarly, the bottom right-hand box in (\ref{dia:types}) represents an abstract type of thing, which probably has more than a million examples, but the label on the box indicates a common name for each such example. 
+
+Typographical problems emerge when writing a text-box in a line of text, e.g. the text-box \fbox{a man} seems out of place here, and the more in-line text-boxes one has in a given paragraph, the worse it gets. To remedy this, we will denote types which occur in a line of text with corner-symbols, e.g. we will write \fakebox{a man} instead of \fbox{a man}.
+
+\comment{%2011/01/13 -- DIVISION POINT
+
+\subsubsection{Mass nouns and proper nouns as types}\label{sec:mass nouns}
+
+Many nouns can be classified as either ``mass nouns" or ``count nouns."  Whereas count nouns can easily be made singular and hence labeled as above, mass nouns (like water) cannot easily be made singular (``a water"?)  Since boxes in an olog should be labeled with ``singular indefinite noun phrases" (for reasons which will be made clear in Section \ref{sec:instances}), one should try to find a way to convert the mass noun into a count noun. One good way to do so is to simply choose an applicable unit of measure. For example, one could replace \fakebox{water} with \fakebox{a liter of water}. In case this is difficult, one can generically use ``an amount of", or if possible ``a documentable amount of"; for example \fakebox{a documentable amount of graphite}.
+
+Proper nouns also present a bit of a problem. It is ok to write \fakebox{John} as a type, but one should probably replace it with \fakebox{an observation of John} or \fakebox{a thing classified as John}. Similarly, one should replace \fakebox{my car} with \fakebox{a car I have now}. Of course there is a discrepancy between these two notions -- by saying ``my car" I am implicitly saying that the set of cars I have now contains exactly one element, or at least one distinguished element. It will become clearer in Sections \ref{sec:instances} and \ref{sec:additional} that our replacement of \fakebox{my car} by \fakebox{a car I have now} pushes this implicit assumption into an explicit realm: we must declare it. However, for now, one can think that we are just being pedantic about wanting to begin the text in each box with the word ``a" or ``an". 
+
+Here is a preview of Section \ref{sec:instances} that may help to explain this pedantry. A box named $x$ could also be called ``a thing classified as $x$"; e.g. \fakebox{a man} implicitly means ``a thing classified as a man."  When creating a new type (box), the author should imagine a computer program in which that box was ``click-able," and in which clicking the box labeled $x$ would cause the computer to display a list of things classified as $x$. If the label on the box is a mass noun like ``water" or a proper noun like ``John", then it would be hard to say what list could be displayed when the box is clicked. Lists by definition enumerate a collection of elements, and as such are suited to countable (enumerable) nouns. A list of ``water" would inevitably be a list of instances that water was seen, or some such, which brings us back to using \fakebox{an instance water was seen}, rather than \fakebox{water} as the label.
+
+Returning to the case of proper nouns, one should note that even a type such as `\fakebox{John} can be considered more or less equivalent to the type \fakebox{a thing classified as John}. The latter description is in keeping with our ``best practices" (see \ref{rules:types}) whereas the first is not.  The reasoning is as follows. In the second description, we see John not as one thing but a set of things -- those things which we classify as John -- a description that is better suited for reasoning. 
+
+For example, imagine expressing the following sentiment: ``\fakebox{John in 2008} was really a different person than \fakebox{John in 2010}."  This is a perfectly normal idea to want to express, but it would be impossible to do so without the ability to consider \fakebox{John in 2008} as a subclass of \fakebox{John}. If \fakebox{John} were the set consisting of just one thing $\{\tn{John}\}$, then a subclass would either be the empty set or the entire set; however, if \fakebox{John} is shorthand for \fakebox{a thing classified as John} then it is obvious that it could have subclasses like \fakebox{a thing classified as John in 2008}. We will discuss this more in Section \ref{sec:instances}.
+
+\subsubsection{Singletons as types}
+
+Whether or not singletons (i.e. indivisible atomic units) exist is perhaps a philosophical question, but their use is usually not appropriate in an olog. In Section \ref{sec:mass nouns} we said that one should replace \fakebox{John}, which seems to be singleton, with the type \fakebox{a thing classified as John}, which can be subdivided further (in time, location, etc.). But even if one accepts that John may not be singleton, what about a number like 104 or a color like red?  Is there more than one 104 or red?
+
+It is easy to see that red can be subdivided: there is dark red, bright red, pinkish-red, etc. In fact, red light is defined to be that light whose wavelength is between 630 and 740 nanometers, and clearly this range can be subdivided, as can the brightness of the red, or even the texture of the thing which was red. In an olog it is preferable to replace \fakebox{red} with something like \fakebox{a red color}, \fakebox{a reddish color}, \fakebox{an experience I call red}, or \fakebox{a color whose wavelength is between 650 and 660 nanometers}. 
+
+This still leaves the issue of numbers like 104. Often a number really represents a small range of numbers. For example when one measures a window to be 104 centimeters, one really measures it to be between 103.95 and 104.05, and \fakebox{a number between 103.95 and 104.05} fits the guidelines for a good type in an olog. Still, what if we really want to just say 104?  Using \fakebox{an expression of 104} is still preferred over \fakebox{104}, because there are many expressions of 104, such as ``26*4", ``one-hundred four", ``\Large\underline{\bf  \em 104}\normalsize", or ``the least number which is greater than 100 and divisible by 4."
+
+Sometimes it really is necessary to express that a type has exactly one instance, and this is possible in more expressive ologs (see Section \ref{sec:singleton spec}). We have tried to show in this section, however, that even types which appear to be singletons can often be profitably subdivided (if not now then later), and that an author should allow for this possibility by following the rules of good practice (Rules \ref{rules:types}).
+
+} %2011/01/13 -- DIVISION POINT
+
+\subsubsection{Types with compound structures}
+
+Many types have compound structures; i.e. they are composed of smaller units. Examples include \begin{align}\label{dia:compound}\xymatrix{\obox{}{.7in}{\rr a man and a woman}&\obox{}{1.4in}{\rr a food $f$ and a child $c$ such that $c$ ate all of $f$}&\labox{}{a triple $(p,a,j)$ where $p$ is a paper, $a$ is an author of $p$, and $j$ is a journal in which $p$ was published}}\end{align}  It is good practice to declare the variables in a ``compound type", as we did in the last two cases of (\ref{dia:compound}). In other words, it is preferable to replace the first box above with something like $$\obox{}{.8in}{a man $m$ and a woman $w$}\hsp\tn{or}\hsp\obox{}{1.1in}{\rr a pair $(m,w)$ where $m$ is a man and $w$ is a woman}$$ so that the variables $(m,w)$ are clear.
+
+\begin{rules}\label{rules:types}
+
+A type is presented as a text box. The text in that box should 
+\begin{enumerate}[(i)]\item begin with the word ``a" or ``an";\item refer to a distinction made and recognizable by the author;\item refer to a distinction for which instances can be documented;\item not end in a punctuation mark;\item declare all variables in a compound structure. \end{enumerate}
+
+\end{rules}
+
+The first, second, and third rules ensure that the class of things represented by each box appears to the author as a well-defined set; see Section \ref{sec:instances} for more details. The fourth and fifth rules encourage good ``readability" of arrows, as will be discussed next in Section \ref{sec:aspects}. 
+
+We will not always follow the rules of good practice throughout this document. We think of these rules being followed ``in the background" but that we have ``nicknamed" various boxes. So \fakebox{Steve} may stand as a nickname for \fakebox{a thing classified as Steve} and \fakebox{arginine} as a nickname for \fakebox{a molecule of arginine}.
+
+\subsection{Aspects}\label{sec:aspects}
+
+An aspect of a thing $x$ is a way of viewing it, a particular way in which $x$ can be regarded or measured. For example, a woman can be regarded as a person; hence ``being a person" is an aspect of a woman. A man has a height (say, taken in inches), so ``having a height (in inches)" is an aspect of a man. In an olog, an aspect of $A$ is represented by an arrow $A\to B$, where $B$ is the set of possible ``answers" or results of the measurement. For example when observing the height of a man, the set of possible results is the set of integers, or perhaps the set of integers between 20 and 120. \begin{align}\label{dia:aspect 1}\xymatrix{\fbox{a woman}\LA{r}{is}&\fbox{a person}}\end{align}\begin{align}\label{dia:aspect 2}\xymatrix{\fbox{a man}\LA{rrr}{has as height (in inches)}&&&\fbox{an integer between 20 and 120}}\end{align}
+
+We will formalize the notion of aspect by saying that aspects are functional relationships.\footnote{In type theory, what we here call aspects are called {\em functions}. Since our types are not fixed sets (see Section \ref{sec:instances}), we preferred a term that was less formal.} Suppose we wish to say that a thing classified as $X$ has an aspect $f$ whose result set is $Y$.  This means there is a functional relationship called $f$ between $X$ and $Y$, which can be denoted $f\taking X\to Y$.  We call $X$ the {\em domain of definition} for the aspect $f$, and we call $Y$ the {\em set of result values} for $f$. For example, a man has a height in inches whose result is an integer, and we could denote this by $h\taking M\to{\bf Int}$. Here, $M$ is the domain of definition for height and ${\bf Int}$ is the set of result values. 
+
+A set may always be drawn as a blob with dots in it. If $X$ and $Y$ are two sets, then a {\em a function from $X$ to $Y$}, denoted $f\taking X\to Y$ can be presented by drawing arrows from dots in blob $X$ to dots in blob $Y$. There are two rules: \begin{enumerate}[(i)]\item each arrow must emanate {\em from} a dot in $X$ and point {\em to} a dot in $Y$;\item each dot in $X$ must have precisely {\em one} arrow emanating from it.\end{enumerate}  Given an element $x\in X$, the arrow emanating from it points to some element $y\in Y$, which we call {\em the image of $x$ under $f$} and denote $f(x)=y$. 
+
+Again, in an olog, an aspect of a thing $X$ is drawn as a labeled arrow pointing from $X$ to a ``set of result values."   Let us concentrate briefly on the arrow in (\ref{dia:aspect 1}). The domain of definition is the set of women (a set with perhaps 3 billion elements); the set of result values is the set of persons (a set with perhaps 6 billion elements).  We can imagine drawing an arrow from each dot in the ``woman" set to a unique dot in the ``person" set.  No woman points to two different people, nor to zero people --- each woman is exactly one person --- so the rules for a functional relationship are satisfied. Let us now concentrate briefly on the arrow in (\ref{dia:aspect 2}). The domain of definition is the set of men, the set of result values is the set of integers $\{20,21,22,\ldots,119,120\}$. We can imagine drawing an arrow from each dot in the ``man" set to a single dot in the ``integer" set. No man points to two different heights, nor can a man have no height: each man has exactly one height. Note however that two different men can point to the same height.
+
+\subsubsection{Invalid aspects}
+
+We tried above to clarify what it is that makes an aspect ``valid", namely that it must be a ``functional relationship."  In this subsection we will present two arrows which on their face may appear to be aspects, but which on closer inspection are not functional (and hence are not valid as aspects). 
+ 
+Consider the following two arrows: \begin{align}\tag{7*}\xymatrix{\fbox{a person}\LA{r}{has}&\fbox{a child}}\end{align}\vspace{-.13in}\begin{align}\tag{8*}\xymatrix{\fbox{a mechanical pencil}\LA{r}{uses}&\fbox{a piece of lead}}\end{align}\setcounter{equation}{8}  A person may have no children or may have more than one child, so the first arrow is invalid: it is not functional because it does not satisfy rule (2) above. Similarly, if we drew an arrow from each mechanical pencil to each piece of lead it uses, it would not satisfy rule (2) above. Thus neither of these is a valid aspect.
+
+Of course, in keeping with Warning \ref{warn:world-view}, the above arrows may not be wrong but simply reflect that the author has a strange world-view or a strange vocabulary. Maybe the author believes that every mechanical pencil uses exactly one piece of lead. If this is so, then $\fakebox{a mechanical pencil}\To{\tn{uses}}\fakebox{a piece of lead}$ is indeed a valid aspect!   Similarly, suppose the author meant to say that each person {\em was once} a child, or that a person has an inner child. Since every person has one and only one inner child (according to the author), the map $\fakebox{a person}\To{\tn{has as inner child}}\fakebox{a child}$ is a valid aspect. We cannot fault the author for such a view, but note that we have changed the name of the label to make its intention more explicit.
+
+\subsubsection{Reading aspects and paths as English phrases}
+
+Each arrow (aspect) $X\To{f} Y$ can be read by first reading the label on its source box (domain of definition) $X$, then the label on the arrow $f$, and finally the label on its target box (set of result values) $Y$. For example, the arrow \begin{align}\label{dia:first author}\fbox{\xymatrix{\smbox{}{a book}\LA{rrr}{has as first author}&&&\smbox{}{a person}}}\end{align} is read ``a book has as first author a person", a valid English sentence.
+
+\comment{%2010/12/31
+
+\begin{remark}
+
+Note that the map in (\ref{dia:first author}) is a valid aspect, but that a similarly benign-looking map $\fakebox{a book}\To{\tn{has as author}}\fakebox{a person}$ would not be valid, because it is not functional. The authors of an olog must be vigilant about this type of mistake because it is easy to miss and it can corrupt the olog.
+
+\end{remark}
+
+}%2010/12/31
+
+Sometimes the label on an arrow can be shortened or dropped altogether if it is obvious from context. We will discuss this more in Section \ref{sec:facts} but here is a common example from the way we write ologs. \begin{align}\label{dia:pair of integers}\fbox{\xymatrix{&\obox{A}{1.2in}{\rr a pair $(x,y)$ where $x$ and $y$ are integers}\ar[dl]_x\ar[dr]^y\\\smbox{B}{an integer}&&\smbox{B}{an integer}}}\end{align}  Neither arrow is readable by the protocol given above (e.g. ``a pair $(x,y)$ where $x$ and $y$ are integers $x$ an integer" is not an English sentence), and yet it is obvious what each map means. For example, given the pair $(8,11)$ which belongs in box $A$, application of arrow $x$ would yield $8$ in box $B$. The label $x$ can be thought of as a nickname for the full name ``yields, via the value of $x$," and similarly for $y$. We do not generally use the full name for fear that the olog would become cluttered with text.
+
+\comment{ %2011/01/13 -- DIVISION POINT
+
+
+\begin{remark}
+
+Unlabeled arrows can be generically labeled ``is functionally assigned."  For example one could read \fakebox{a hammer}$\to$\fakebox{a manufacturer} as ``a hammer is functionally assigned a manufacturer". However, if there are many unlabeled arrows in a given olog then the author must somehow differentiate between them. For this reason it is good practice to formally assign such an arrow the label ``is functionally assigned by $m$" where $m$ is some specific integer. This will be made precise in Definition \ref{def:basic olog}.
+
+\end{remark}
+
+} %2011/01/13 -- DIVISION POINT
+
+One can also read paths through an olog by inserting the word ``which" after each intermediate box. For example the following olog has two paths of length 3 (counting arrows in a chain): \small\begin{align}\label{olog:paths}\fbox{\xymatrix{\fbox{a child}\LA{r}{is}&\fbox{a person}\LA{rr}{has as parents}\LAL{dr}{has, as birthday}&&\obox{}{.8in}{\rr a pair $(w,m)$ where $w$ is a woman and $m$ is a man}\LA{r}{$w$}&\fbox{a woman}\\&&\fbox{a date}\LA{r}{includes}&\fbox{a year}}}\end{align}  \normalsize The top path is read ``a child is a person, which has as parents a pair $(w,m)$ where $w$ is a woman and $m$ is a man, which yields, via the value of $w$, a woman."  The reader should read and understand the content of the bottom path. 
+
+
+\subsubsection{Converting non-functional relationships to aspects}\label{sec:relations}
+
+There are many relationships that are not functional, and these cannot be considered aspects. Often the word ``has" indicates a relationship --- sometimes it is functional as in $\fakebox{a person}\To{\tn{ has }}\fakebox{a stomach}$, and sometimes it is not, as in $\fakebox{a father}\To{\tn{has}}\fakebox{a child}$. (Obviously, a father may have more than one child.)  A quick fix would be to replace the latter by $\fakebox{a father}\To{\tn{has}}\fakebox{a set of children}$.  This is ok, but the relationship between \fakebox{a child} and \fakebox{a set of children} then becomes an issue to deal with later. There is another way to indicate such ``non-functional" relationships.
+
+In mathematics, a relation between sets $A_1, A_2$, and so on through $A_n$ is defined to be a subset of the Cartesian product $$R\ss A_1\cross A_2\cross\cdots\cross A_n.$$  The set $R$ represents those sequences $(a_1,a_2,\ldots,a_n)$ that are so-related. In an olog, we represent this as follows $$\fbox{\xymatrix{&&\fbox{$R$}\ar[ddll]\ar[ddl]\ar[ddr]\\\\\fbox{$A_1$}&\fbox{$A_2$}&\cdots&\fbox{$A_n$}}}$$  For example, $$\fbox{\xymatrix{&\labox{R}{a sequence $(p,a,j)$ where $p$ is a paper, $a$ is an author of $p$, and $j$ is a journal in which $p$ was published}\ar[ddl]_p\ar[dd]_a\ar[ddr]^j\\\\\smbox{A_1}{a paper}&\smbox{A_2}{an author}&\smbox{A_3}{a journal}}}$$  Whereas $A_1\cross A_2\cross A_3$ includes all possible triples $(p,a,j)$ where $a$ is a person, $p$ is a paper, and $j$ is a journal, it is obvious that not all such triples are found in $R$. Thus $R$ represents a proper subset of $A_1\cross A_2\cross A_3$.
+
+\comment{%2011/01/13 -- DIVISION POINT
+
+A functional relationship is a special kind of relation and as such could be written in the format above. For example the arrow $\fakebox{a child}\To{\tn{has}}\fakebox{a father}$ is a functional relationship and can be replaced by \begin{align}\label{olog:functional relation}\fbox{\xymatrix{&\obox{R}{1.7in}{a pair $(c,f)$ where $c$ is a child and $f$ is the father of $c$}\ar[dl]_c\ar[dr]^f\\\smbox{A_1}{a child}&&\smbox{B}{a father}}}\end{align}  Here $R$ is called the {\em graph} of the functional relationship $\fakebox{a child}\To{\tn{has}}\fakebox{a father}$. But the same relation encodes that every father has a set of children. 
+
+}%2011/01/13 -- DIVISION POINT
+
+
+\begin{rules}\label{rules:aspects}
+
+An aspect is presented as a labeled arrow, pointing from a source box to a target box. The arrow text should
+
+\begin{enumerate}[(i)]
+\item begin with a verb;
+\item yield an English sentence, when the source-box text followed by the arrow text followed by the target-box text is read;
+\item refer to a functional dependence: each instance of the source type should give rise to a specific instance of the target type;
+\end{enumerate}
+
+\end{rules}
+
+\subsection{Facts}\label{sec:facts}
+
+In this section we will discuss facts and their relationship to ``path equivalences."  It is such path equivalences, which exist in categories but do not exist in graphs, that make category theory so powerful. See \cite{Spi-Cats} for details.
+
+Given an olog, the author may want to declare that two paths are equivalent. For example consider the two paths from $A$ to $C$ in the olog \begin{align}\label{olog:commute}\fbox{\xymatrix{\smbox{A}{a person}\LA{rr}{has as parents}\LAL{drr}{\parbox{.8in}{has as mother}}&&\obox{B}{.8in}{\rr a pair $(w,m)$ where $w$ is a woman and $m$ is a man}\ar@{}[dll]|(.4){\checkmark}\LA{d}{$w$}\\&&\smbox{C}{a woman}}}\end{align}  We know as English speakers that a woman parent is called a mother, so these two paths $A\to C$ should be equivalent. A more mathematical way to say this is that the triangle in Olog (\ref{olog:commute}) {\em commutes}. 
+
+A {\em commutative diagram} is a graph with some declared path equivalences. In the example above we concisely say ``a woman parent is equivalent to a mother."  We declare this by defining the diagonal map in (\ref{olog:commute}) to be {\em the composition} of the horizontal map and the vertical map. 
+
+We generally prefer to indicate a commutative diagram by drawing a check-mark, $\checkmark$, in the region bounded by the two paths, as in Olog (\ref{olog:commute}). Sometimes, however, one cannot do this unambiguously on the 2-dimensional page. In such a case we will indicate the commutative diagrams (fact) by writing an equation. For example to say that the diagram $$\xymatrix{A\ar[r]^f\ar[d]_h&B\ar[d]^g\\C\ar[r]_i&D}$$ commutes, we could either draw a checkmark inside the square or write the equation $f;g=h;i$ above it. Either way, it means that ``$f$ then $g$" is equivalent to ``$h$ then $i$". 
+
+\comment{ %2011/01/13 -- DIVISION POINT
+
+The following is an example used in the paper \cite{Sp}.
+
+\begin{example}\label{ex:employee}
+
+Suppose one is running a department store in which every employee works in a specified department, every employee has a manager, and every department has a secretary (who is an employee). The secretary of any department works in that department, and the manager of any employee works in the same department as that employee. Finally, every employee has a first and last name and every department has a name as well.
+
+This is captured in the olog:
+\begin{align}\label{dia:basic cat} \fbox{\parbox{3.9in}{\underline{has as manager;works in=works in}\\\underline{has as secretary;works in=$\id_{\fakebox{a department}}$}\\\\\xymatrix@=40pt{\smbox{E}{an employee}\ar@<.5ex>[rr]^{\tn{works in}}\ar@{{}{-}*{\curlyvee}}`u[]`r[][]_(0){\parbox{.8in}{\footnotesize\tn{has as manager\\~}}}\ar@/_1pc/[dd]_{\tn{has as first name}}\ar@/^1pc/[dd]^{\tn{has as last name}}&&\smbox{D}{a department}\ar@<.5ex>[ll]^{\tn{has as secretary}}\ar@/^1pc/[ddll]^{\tn{has as name}}\\\\\smbox{S}{a string of letters}}}}\end{align}  At the top are two underlined equations, or facts. The first fact states that every employee works in the same department that his or her manager works in. The second fact states that the secretary of any given department works in that department. Note that some diagrams do not commute. For example, the first name of the secretary of a department is not equal to the name of the department, even though both are paths $D\to S$. 
+
+\end{example}
+
+} %2011/01/13 -- DIVISION POINT
+
+\subsubsection{More complex facts}
+
+Recording real-world facts in an olog can require some creativity. Whereas a fact like ``the brother of ones father is ones uncle" is recorded as a simple commutative diagram, others are not so simple. We will try to show the range of expressivity of commutative diagrams in the following two examples.
+
+\setcounter{theorem}{1}\begin{example}\label{ex:truck car}
+
+How would one record a fact like ``a truck weighs more than a car"? We suggest something like this:\small$$\fbox{\xymatrix@=10pt{&\smbox{B_1}{a truck}\LA{rr}{is}&\ar@{}[d]|{\checkmark}&\obox{C}{.6in}{a physical object}\\\smbox{A}{a truck $t$ and a car $c$}\ar[ur]^t\ar[dr]_c\ar[rrrr]^{t \mapsto x,\;\;c \mapsto y}&&&&\obox{D}{1.1in}{a pair $(x,y)$ where $x$ and $y$ are physical objects and $x$ weighs more than $y$}\ar[ul]_-x\ar[dl]_-y\\&\smbox{B_2}{a car}\LA{rr}{is}&\ar@{}[u]|{\checkmark}&\obox{C}{.6in}{a physical object}}}$$\normalsize  where both top and bottom commute. This olog exemplifies the fact that simple sentences sometimes contain large amounts of information. While the long map may seem to suffice to convey the idea ``a truck weighs more than a car," the path equivalences (declared by check-marks) serve to ground the idea in more basic types. These other types tend to be useful for other purposes, both within the olog and when connecting it to others.
+
+\end{example}
+
+\comment{%2011/01/13 -- DIVISION POINT
+
+\begin{example}
+
+There is a difference between one person liking another person, and two people being friends --- the second is assumed symmetric. To capture this one could use the olog $$\fbox{\parbox{2.9in}{\begin{center}\underline{$\tn{flip};\tn{flip}=\id_1$}\hsp\underline{$\tn{flip};x=y$}\hsp\underline{$\tn{flip};y=x$}\end{center}\xymatrix@=12pt{&\mebox{1}{a pair of people $(x,y)$ where $x$ and $y$ are friends}\ar[dddd]_{\tn{flip}}\ar[ddl]_x\ar[ddr]^y\\\\\smbox{2}{a person}\ar@{}[r]|-{\checkmark}&&\smbox{2}{a person}\ar@{}[l]|-{\checkmark}\\\\&\mebox{1}{a pair of people $(x,y)$ where $x$ and $y$ are friends}\ar[uul]_y\ar[uur]^x}}}$$    The fact that every object is written twice in this olog might be confusing; it was done so as to ease readability of the olog. Actually ``flip" is a map from 1 to itself, and $x$ and $y$ have the same domain of definition as well as the same set of result values. In the precise definition of basic ologs, given in Definition \ref{def:basic olog}, this way of drawing ologs will be made precise.
+
+\end{example}
+
+}%2011/01/13 -- DIVISION POINT
+
+\setcounter{subsubsection}{2}\subsubsection{Specific facts at the olog level}
+
+Another fact one might wish to record is that ``John Doe's weight is 150 lbs."  This is established by declaring that the following diagram commutes:\begin{align}\label{olog:weight}\fbox{\xymatrix@=18pt{\fbox{John Doe}\ar@{}[ddrrrr]|{\checkmark}\LA{rrrr}{has as weight (in pounds)}\LA{dd}{is}&&&&\fbox{150}\LA{dd}{is}\\\\\fbox{a person}\LA{rrrr}{has as weight (in pounds)}&&&&\fbox{a real number}}} \end{align}  If one only had the top line, it would be less obvious how to connect its information with that of other ologs. (See Section \ref{sec:connecting ologs} for more on connecting different ologs).
+
+\comment{%2011/01/13 -- DIVISION POINT
+
+\begin{remark}
+
+In Section \ref{sec:mass nouns} that a proper noun like \fakebox{John Doe} should be replaced by something like \fakebox{an instance of John Doe}. But then the top map in Olog (\ref{olog:weight}) becomes suspect: have all instances of John Doe had the same weight?  This is a case where using rules of good practice helps expose inaccuracies that could cause problems later. To better reflect the intended meaning, the \fakebox{John Doe} box should be replaced by something like \fakebox{John Doe, on January 1, 2011}.
+
+\end{remark}
+
+}%2011/01/13 -- DIVISION POINT
+
+Note that the top line in Diagram (\ref{olog:weight}) might also be considered as existing at the ``data level" rather than at the ``olog level."  In other words, one could see John Doe as an ``instance" of \fakebox{a person}, rather than as a type in and of itself, and similarly see 150 as an instance of \fakebox{a real number}. This idea of an olog having a ``data level" is the subject of the Section \ref{sec:instances}.
+
+\setcounter{theorem}{3}\begin{rules}\label{rules:facts}
+
+A fact is the declaration that two paths (having the same source and target) in an olog are equivalent. Such a fact is either presented as a checkmark between the two paths (if such a check-mark is unambiguous) or by an equation. Every such equivalence should be declared; i.e. no fact should be considered too obvious to declare.
+
+\end{rules}
+
+\section{Instances}\label{sec:instances}
+
+The reader at this point hopefully sees an olog as a kind of ``concept map," and it is one, albeit a concept map with a formal structure (implicitly coming from category theory) and specific rules of good practice. In this section we will show that one can also load an olog with data. Each type can be assigned a set of instances, each aspect will map the instances of one type to instances of the other, and each fact will equate two such mappings. We give examples of these ideas in Section \ref{sec:instances of taf}. 
+
+In Section \ref{sec:relationship olog db}, we will show that in fact every olog can also serve as the layout for a database. In other words, given an olog one can immediately generate a {\em database schema}, i.e. a system of tables, in any reasonable data definition language such as that of SQL. The tables in this database will be in one-to-one correspondence with the types in the olog. The columns of a given table will be the aspects of the corresponding type, i.e. the arrows whose source is that type. Commutative diagrams in the olog will give constraints on the data.
+
+In fact, this idea is the basic thesis in \cite{Spi-FDM}, even though the word olog does not appear in that paper. There it was explained that a category $\mcC$ naturally can be viewed as a database schema and that a functor $I\taking\mcC\to\Set$, where $\Set$ is the category of sets, is a database state. Since an olog is a drawing of a category, it is also a drawing of a database schema. The current section is about the ``states" of an olog, i.e. the kinds of data that can be captured by it. 
+
+\subsection{Instances of types, aspects, and facts}\label{sec:instances of taf}
+
+Recall from Section \ref{sec:basic ologs} that basic ologs consist of types, displayed as boxes; aspects, displayed as arrows; and facts, displayed as equations or check-marks. In this section we discuss the instances of these three basic constructions.  The rules of good practice (\ref{rules:types}, \ref{rules:aspects}, and \ref{rules:facts}) were specifically designed to simplify the process of finding instances.
+
+\subsubsection{Instances of types}\label{sec:instances of types}
+
+According to Rules \ref{rules:types}, each box in an olog contains text which should refer to {\bf a distinction made and recognizable by the author for which instances can be documented.}  For example if my olog contains a box \begin{align}\label{dia:petting}\obox{}{1.3in}{a pair $(p,c)$ where $p$ is a person, $c$ is a cat, and $p$ has petted $c$}\end{align} then I must have some concept of when this situation occurs. Every time I witness a new person-cat petting, I document it. Whether this is done in my mind, in a ledger notebook, or on a computer does not matter; however using a computer would probably be the most self-explanatory. Imagine a computer program in which one can create ologs. Clicking a text box in an olog results in it ``opening up" to show a list of documented instances of that type. If one is reading the CBS news olog and clicks on the box \fakebox{an episode of 60 Minutes}, he or she should see a list of all episodes of the TV show ``60 Minutes." If we wish to document a new person-cat petting incident we click on the box in (\ref{dia:petting}) and add this new instance.
+
+\subsubsection{Instances of aspects}
+
+According to Rules \ref{rules:aspects}, each arrow in an olog should be labeled with text that refers to a functional relationship between the source box and the target box. A functional relationship $f\taking A\to B$ between finite sets $A$ and $B$ can always be written as a 2-column table: the first column is filled with the instances of type $A$ and the second column is filled with their $f$-values, which are instances of type $B$. 
+
+For example, consider the aspect \begin{align}\label{dia:moon1}\fbox{a moon}\To{\tn{orbits}}\fbox{a planet}\end{align}  We can document some instances of this relationship using the following table: \begin{align}\label{dia:moon2}\begin{tabular}{| c || c |}\hline\multicolumn{2}{| c |}{\bf orbits}\\\hline{\bf a moon}&{\bf a planet}\\\hline\hline The Moon&Earth\\\hline Phobos&Mars\\\hline Deimos&Mars\\\hline Ganymede & Jupiter\\\hline Titan & Saturn\\\hline\end{tabular}\end{align}  Clearly, this table of instances can be updated as more moons are discovered by the author (be it by telescope, conversation, or research).
+
+The correspondence between aspect (\ref{dia:moon1}) and Table (\ref{dia:moon2}) makes it clear that ologs can serve to hold data which exemplifies the author's world-view. In Section \ref{sec:relationship olog db}, we will show that ologs (which have many aspects and facts) can serve as bona fide database schemas.
+
+\subsubsection{Instances of facts}
+
+Recall the following olog: \begin{align*}\tag{\ref{olog:commute}}\fbox{\xymatrix{\smbox{A}{a person}\LA{rr}{has as parents}\LAL{drr}{has as mother}&&\obox{B}{.8in}{\rr a pair $(w,m)$ where $w$ is a woman and $m$ is a man}\ar@{}[dl]|{\parbox{.5in}{\checkmark\\~}}\LA{d}{$w$}\\&&\smbox{C}{a woman}}}\end{align*}  and consider the following instances of the three aspects in it: $$\begin{tabular}{| c || c |}\hline\multicolumn{2}{| c |}{\bf has as parents}\\\hline{\bf a person}&{\bf a pair $(w,m)$ ...}\\\hline\hline Cain&(Eve, Adam)\\\hline Abel&(Eve, Adam)\\\hline Chelsey&(Hillary, Bill)\\\hline\end{tabular}\hsp\begin{tabular}{| c || c |}\hline\multicolumn{2}{| c |}{\bf $w$}\\\hline{\bf a pair $(w,m)$ ...}&{\bf a woman}\\\hline\hline (Eve, Adam)&Eve\\\hline (Hillary, Bill)&Hillary\\\hline (Margaret, Samuel)&Margaret\\\hline (Emily, Kris)&Emily\\\hline\end{tabular}$$\vspace{-.32in}\begin{align}\label{dia:instances of facts}~\end{align}\vspace{-.1in}$$\begin{tabular}{| c || c |}\hline\multicolumn{2}{| c |}{\bf has as mother}\\\hline{\bf a person}&{\bf a woman}\\\hline\hline Cain&Eve\\\hline Abel &Eve\\\hline Chelsey &Hillary\\\hline\end{tabular}$$
+
+When we declare that the diagram in (\ref{olog:commute}) commutes (using the check-mark), we are saying that for every instance of \fakebox{a person} (of which we have three: Cain, Abel, and Chelsey), the two paths to \fakebox{a woman} give the same answers. Indeed, for Cain the two paths are: \begin{enumerate}[(i)]\item Cain $\mapsto$ (Eve, Adam) $\mapsto$ Eve; \item Cain $\mapsto$ Eve;\end{enumerate} and these answers agree. If one changed any instance of the word ``Eve" to the word ``Steve" in one of the tables in (\ref{dia:instances of facts}), some pair of paths would fail to agree. Thus the ``fact" that the diagram in (\ref{olog:commute}) commutes ensures that there is some internal consistency between the meaning of parents and the meaning of mother, and this consistency must be born out at the instance level.
+
+All of this will be formalized in Section \ref{sec:instance data}.
+
+\subsection{The relationship between ologs and databases}\label{sec:relationship olog db}
+
+Recall from Section \ref{sec:instances of types} that we can imagine creating an olog on a computer. The user creates boxes, arrows, and compositions, hence creating a category $\mcC$. Each text-box $x$ in the olog can be ``clicked" by the computer mouse, an action which allows the user to ``view the contents" of $x$. The result will be a set of things, which we might call $I(x)\in\Set$, whose elements are things of type $x$. So clicking on the box \fakebox{a man} one sees $I(\fakebox{a man})$, the set of everything the author has documented as being a man. For each aspect $f\taking x\to y$ of $x$, the user can see a function from the set $I(x)$ to $I(y)$, perhaps as a 2-column table as in (\ref{dia:instances of facts}). 
+
+The type $x$ may have many aspects, which we can put together into a single multi-column table. Its columns are the aspects of $x$, and its rows are the elements of $I(x)$. Consider the following olog, taken from \cite{Spi-FDM} where it was presented as a database schema. \begin{align}\label{olog:employee} \fbox{\xymatrix{\fbox{employee}\ar@<.5ex>[rr]^{\tn{works in}}\ar@(l,u)[]^{\tn{manager}}\ar@/_1pc/[dd]_{\tn{first name}}\ar@/^1pc/[dd]^{\tn{last name}}&&\fbox{department}\ar@<.5ex>[ll]^{\tn{secretary}}\ar@/^1pc/[ddll]^{\tn{name}}\\\\\fbox{string}}}\end{align}  The type \fakebox{Employee} has four aspects, namely {\tt manager} (valued in \fakebox{Employee}), {\tt works in} (valued in \fakebox{department}), and {\tt first name} and {\tt last name} (valued in \fakebox{string}). As a database, each type together with its aspects form a multi-column table, as in the following example.
+
+\begin{example}\label{ex:instances of employee}
+
+We can convert Olog (\ref{olog:employee}) into a database schema. Each box represents a table, each arrow out of a box represents a column of that table. Here is an example state of that database. 
+
+ \begin{align}\label{dia:flb}\xymatrix{\parbox{3.5in}{\begin{tabular}{| l || l | l | l | l |}\hline\multicolumn{5}{| c |}{\bf employee}\\\hline {\bf Id}&{\bf first name}&{\bf last name}&{\bf manager}&{\bf works in}\\\hline 101&David&Hilbert&103&q10\\\hline 102&Bertrand&Russell&102&x02\\\hline 103&Alan&Turing&103&q10\\\hline\end{tabular}\\~\vspace{.1in}\\\begin{tabular}{| l || l | l |}\hline\multicolumn{3}{| c |}{\bf department}\\\hline {\bf Id}&{\bf name}&{\bf secretary}\\\hline q10&Sales&101\\\hline x02&Production&102\\\hline\end{tabular}}&\parbox{.5in}{\begin{tabular}{| l ||}\hline\multicolumn{1}{| c |}{\bf string}\\\hline{\bf Id}\\\hline a\\\hline b\\\hline\vdots\\\hline z\\\hline aa\\\hline ab\\\hline\vdots\\\hline\end{tabular}}}\end{align}  Note that every arrow $f\taking x\to y$ of Olog (\ref{olog:employee}) is represented in Database (\ref{dia:flb}) as a column of table $x$, and that every cell in that column can be found in the Id column of table $y$. For example, every cell in the ``works in" column of table {\bf employee} can be found in the Id column of table {\bf department}.
+ 
+\end{example}
+
+The point is that ologs can be drawn to represent a world-view (as in Section \ref{sec:basic ologs}), but they can also store data.  Rules 1,2, and 3 in  \ref{rules:types} align the construction of an olog with the ability to document instances for each of its types. 
+
+\setcounter{subsubsection}{1}\subsubsection{Instance data as a set-valued functor}\label{sec:instance data}
+
+Let $\mcC$ be an olog. Section \ref{sec:instances} so far has described instances of types, aspects, and facts and how all of these come together into a set of interconnected tables. The assignment of a set of instances to each type and a function to each aspect in $\mcC$, such that the declared facts hold, is called an assignment of {\em instance data} for $\mcC$. More precisely, instance data on $\mcC$ is a functor $\mcC\to\Set$, as in Definition \ref{def:set-valued functor}. 
+
+\setcounter{theorem}{2}
+
+\begin{definition}\label{def:set-valued functor}
+
+Let $\mcC$ be a category (olog)
+with underlying graph $|\mcC|$, 
+and let $\Set$ denote the category of sets. 
+An {\em instance of $\mcC$} 
+(or {\em an assignment of instance data for $\mcC$}) 
+is a functor $I\taking\mcC\to\Set$. 
+That is, 
+it consists of 
+\begin{itemize}
+\item a set $I(x)$ for each object (type) $x$ in $\mcC$,
+\item a function $I(f)\taking I(x)\to I(y)$ for each arrow (aspect) $f\taking x\to y$ in $\mcC$, and 
+\item for each fact (path-equivalence or equation) 
+%
+\footnote{If we let  
+$f = f_{1} {\,;\,} f_{2} {\,;\,} \cdots {\,;\,} f_{n}$ and 
+$f' = f'_{1} {\,;\,} f'_{2} {\,;\,} \cdots {\,;\,} f'_{m}$,
+then we often write $(f = f') \colon i \rightarrow j$ to denote the fact that these paths are equivalent.}
+%
+$$f_{1} {\,;\,} f_{2} {\,;\,} \cdots {\,;\,} f_{n} = f'_{1} {\,;\,} f'_{2} {\,;\,} \cdots {\,;\,} f'_{m}$$ 
+declared in $\mcC$, 
+an equality of functions 
+$$I(f_{1}) {\,;\,} I(f_{2}) {\,;\,} \cdots {\,;\,} I(f_{n}) = I(f'_{1}) {\,;\,} I(f'_{2}) {\,;\,} \cdots {\,;\,} I(f'_{m}).$$
+\end{itemize}
+
+\end{definition}
+
+For more on this viewpoint of categories and functors, the reader can consult \cite{Spi-Cats}.
+
+\section{Communication between ologs}\label{sec:connecting ologs}
+
+The world is inherently heterogeneous. 
+Different individuals 
+%
+\footnote{By an individual we mean 
+either an individual person acting on their own, a community acting as a single entity, a software agent, etc.
+Later in this section
+we will use the notion of a community acting as a distributed collection of linked, yet independent, individuals.}
+%
+in the world naturally have different world-views 
+--- each individual has its own perspective on the world. 
+The conceptual knowledge (information resources) of an individual represents its world-view, 
+and is encoded in an ontology log, or olog, containing the concepts, relations, and observations 
+that are important to that individual.
+An olog is a formal specification of 
+an individual's world-view in a language representing the concepts and relationships used by that individual. 
+In addition to the formulation of an expressive language,
+a specification needs to contain axioms (facts) that constrain the possible interpretations of that language. 
+
+Since the ologs of different individuals are encoded in different languages, 
+the important need to merge disparate ologs into a more general representation 
+is difficult, time-consuming and expensive. 
+The solution is to develop appropriate communication between individuals to allow interoperability of their ologs.
+Communication can occur between individuals when there is some commonality between their world-views. 
+It is this commonality that allows one individual to benefit from the knowledge and experience of another. 
+In this section we will discuss how to formulate these channels of communication, 
+thereby describing a generalized and practical technique for merging ologs.
+
+The mathematical concept that makes it all work is that of a functor. 
+A functor is a mapping from one category to another that preserves all the declared structure.
+Whereas in Definition \ref{def:set-valued functor} 
+we defined a functor from an olog to $\mathrmbf{Set}$, 
+here we will be discussing functors from one olog to another. 
+
+Suppose we have two ologs, $\mcC$ and $\mcD$, that represent the world-views of two individuals. 
+A functor $F\taking\mcC\to\mcD$ is basically a way of matching each type (box) of $\mcC$ to a type of $\mcD$, 
+and each aspect (arrow) in $\mcC$ to an aspect (or path of aspects) in $\mcD$. 
+Once ologs are aligned in this way, communication can occur: 
+the two individuals know what each other is talking about. 
+In fact, 
+mathematically we can show that 
+instance data held in $\mcC$ can be transformed (in coherent ways) to instance data held in $\mcD$, 
+and vice versa (see \cite{Spi-FDM}).
+In simple terms, 
+once individuals understand each other in a certain domain (be it social, mathematical, etc.), 
+they can communicate their views about it.
+
+While the basic idea is not hard, the details can be a bit technical. This section is written in a more formal and logical style, and is decidedly more difficult than the others. For this section only, we assume the reader is familiar with the notion of fibered categories, colimits in the category $\Cat$ of categories, etc. We return to our more informal style in Section \ref{sec:expressive I}, where we discuss how an individual can author a more expressive olog.
+
+\subsection{Categories and their presentations}
+
+We never defined categories in this paper, but we defined ologs and said that the two notions amounted to the same thing. Thus, we implied that a category consists of the following: a set of objects, a set of arrows (each pointing from one object to another), and a congruence relation on paths.\footnote{A congruence relation on paths is an equivalence relation on paths
+that respects endpoints and is closed under composition from left and right 
+(see the axioms in \ref{tab:entailment:axioms}).}
+%
+This differs from the standard definition of categories (see \cite{Mac}), which replaces
+our congruence relation with a composition rule and associativity law (obtained by taking the categorical quotient). One could say that an olog is a presentation of a category by generators (objects and arrows) and relations (path congruences). Any category can be resolved and presented in such a way, which we will call a specification. Likewise any functor can be resolved and presented as a morphism between specifications.
+\footnote{We take an agnostic approach to foundations here. 
+With the presentation form, we show how categories and functors are definable in terms of sets and functions,
+indicating how category theoretic concepts could be defined in terms of set theory. 
+However, we fully understand that $\mathbf{Set}$, the category of sets and functions, is but one example of a topos, 
+indicating how set theoretic concepts could be defined in terms of category theory.}
+
+In fact, this presentation form for categories (and the analogous one for functors) 
+is preferable for our work on communication between ologs, 
+because it separates the strictly graphical part of an olog (its types and aspects, regarded as the olog language) 
+from the propositional part (its facts, regarded as the olog formalism). 
+This presentation form is standard in the institutions \cite{GB:INS} and information flow \cite{BS:IF} communities, 
+since it separates the mechanism of flow from the content of flow; in this case the formal content. 
+%
+Our work here applies the general theories of institutions and information flow to the specific logical system that underlies categories and functors,\footnote{For the expert, this refers to the sketch logical system {\ttfamily Sk}, 
+in its various manifestations.}
+demonstrating how this logical system can be used for knowledge representation.
+Using the presentation forms for categories and functors, we show how communication  between individuals is effected by the flow of information along channels. 
+
+\subsection{The architecture underlying information systems}
+
+We think of a community of people, businesses, etc. in terms of the ologs of each individual participant together with the information channels that connect them. These channels are functors between ologs, which allow communication to occur. The heterogeneity of multiple differing world-views 
+%\footnote{As presented above,
+%the world-view of a community is the framework of ideas and beliefs by which it interprets the world and interacts with it.}
+connected through such links can lead to a flexibility and robustness of interaction. 
+For example, heterogeneity allows for multiple schemas to be employed in the design of database systems in particular, 
+and multiple languages to be employed in the design of knowledge representation systems in general.
+
+For any olog, consider the underlying graph of types and aspects. 
+We regard this graph as being the language of the olog, 
+\footnote{Section \ref{sec:CG} indicates how natural languages can be encoded into ologs.}
+with the facts of the olog being a subset of all the possible assertions that one can make within this language.
+Any two ologs with the same underlying graph of types and aspects have the same language,
+and since the facts of each olog are expressed in the same language,
+they can be ``understood'' by each other without translation.
+As such, 
+we think of the collection of all ologs with the same language (underlying graph) as forming a homogeneous {\em context},
+with the ologs ordered in a specialization-generalization hierarchy. 
+
+Whereas an olog represents (the world-view of) a single individual,
+an information system (of ologs) represents a community of separate, independent and distributed individuals.
+Here we consider an information system to be a diagram of ologs of some shape $\mathrmbf{I}$;
+that is,
+a collection of ologs and constraints indexed by a base category $\mathrmbf{I}$.
+The parts of the system represent 
+either the ologs of the various individuals in the system 
+or common grounds needed for communication between the individuals.
+Each part of the system specifies its world-view as facts expressed in terms of its language.
+The system is heterogeneous, since each part has a separate language for the expression of its world-view. 
+The morphisms between the parts are the alignment (constraint) links defining the common grounds. 
+
+As will be made clear in a moment, 
+there is an underlying distributed system consisting of 
+the language (underlying graph) for each component part of the information system and 
+a translation (graph morphism) for each alignment link. 
+We can think of this distributed system
+as an underlying system of languages linked by translating dictionaries.
+This distributed system determines an information channel 
+with core language (graph) and component translation links (graph morphisms)
+along which the specifications of each component part can flow to the core.
+We can think of this core as a universal language for the whole system
+and the channel as a translation mechanism from parts to whole.
+At the core, 
+the direct flow of the component specifications are joined together (unioned) and allowed to interact through entailment. 
+The result of this interaction can then be distributed back to the component parts,
+thereby allowing the separate parts of an information system to interoperate.
+
+In this section, we will make all this clear and rigorous. 
+As mentioned above, we will work with category presentations (here called {\em specifications}) rather than categories. 
+We will discuss the homogeneous contexts called fibers in detail and give the axioms of satisfaction. 
+We will then discuss how morphisms between graphs (the translating dictionaries between the  ologs) allow for direct and inverse information flow between these homogeneous fiber contexts. 
+Finally, we discuss specifications (also known as {\em theories}) and the lattice of theories construction for ontologies.
+
+In Section \ref{sec:alignment} 
+we will discuss how the information in ologs can be aligned by the use of common grounds. 
+This alignment will result in the creation of {\em information systems}, 
+which are systems of ologs connected together along functors. 
+We will discuss how to take the information contained in each olog of a heterogeneous system and integrate it all into a single whole, called the fusion olog. Finally we will discuss how the consequence of bringing all this information together, and allowing it to interact, can be transferred back to each part of the system (individual olog) as a set of local facts entailed by remote ologs, allowing for a kind of interoperability between ologs.
+In Section \ref{sec:CG} we will discuss conceptual graphs and their relationship to ologs.
+
+\subsubsection{Fibers}\label{sec:fibers}
+
+A graph $G$ contains types as nodes and aspects as edges.
+The graphs underlying an olog is considered its {\em language}.
+Any category $\mathcal{C}$ has an underlying graph $|\mathcal{C}|$.
+In particular, 
+$|\mathrmbf{Set}|$ is the graph underlying the category of sets and functions.
+Olog (12) has an underlying graph containing the three types \fakebox{person}, \fakebox{person-pair} and \fakebox{woman} 
+and the three aspects `has a parent', `woman' and `has as mother'.
+Olog (17) has an underlying graph containing the three types \fakebox{employee}, \fakebox{department}, and \fakebox{string} 
+and the six aspects `manager', `works in', `secretary', `name', `first name' and `last name'.
+Let $\mathrmbfit{eqn}(G)$ denote the set of all facts (equations) 
+that are possible to express using the types and aspects of $G$.
+A $G$-specification
+%\footnote{Specifications are also known as theories.} 
+is a set $E \subseteq \mathrmbfit{eqn}(G)$ consisting of some of the facts expressible in $G$.
+The singleton set with the one fact 
