@@ -91,7 +91,7 @@ def build_olog(content, types):
 
 def ologify(content, pull_facts=False):
     prompt = ""
-    subprompts = ['intro', 'general', 'types-ex', 'aspects-ex', 'commute', 'schema']
+    subprompts = ['intro', 'general', 'types-ex', 'aspects-ex', 'commute', 'holy', 'schema']
     for p in subprompts:
         s = get_resource(p)
         prompt += ' ' + s
