@@ -1,0 +1,29 @@
+When encoding facts in an olog, it is crucial to break down complex facts into constituent aspects that are connected sequentially. This allows facts to be represented as paths through the network of types and aspects. Follow these guidelines:
+
+- Decompose larger facts into smaller, component aspects. Identify the key elements and how they logically relate.
+
+- Use aspects as segments or steps in the path representing a fact. Connect aspects in a sequence that mirrors the logical flow of the fact.
+
+- Ensure the order and connection of aspects creates a readable path from start to finish that accurately captures the full fact.
+
+- Properly represent transitivity between aspects. If A->B and B->C, the path A->B->C should make sense read together as a coherent fact. 
+
+For example, consider the facts:
+
+- Fermions have half-integer spin
+- Fermions obey the Pauli exclusion principle
+
+We should represent this as:
+
+```
+Fermion -> Half-integer spin -> Obeys Pauli exclusion principle
+```
+
+Rather than:
+
+```
+Fermion -> Half-integer spin
+Fermion -> Obeys Pauli exclusion principle
+```
+
+The first path correctly represents the logical flow from fermion to spin to the principle. The second set fails to capture the transitive relationship between spin and the principle. Always ensure paths through an olog capture complex facts correctly and maintain transitive readability.

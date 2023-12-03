@@ -8,10 +8,7 @@
         "Instances": [
           {
             "ID": "Unique identifier for the instance",
-            "Attributes": {
-              "AttributeName": "AttributeValue",
-              // More attributes as needed
-            }
+            "Name": "Name of the instance",
           },
           // More instances as needed
         ]

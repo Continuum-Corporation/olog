@@ -1,0 +1,46 @@
+### Instructions for Extracting Facts from Text or Code
+
+#### Objective
+The goal is to systematically extract a comprehensive list of facts from a given piece of text or code. This process involves identifying and distilling key information into clear, concise statements that accurately represent the content.
+
+#### Steps for Extraction
+
+1. **Thorough Reading/Analysis**:
+   - Begin with a careful and complete reading or analysis of the text or code. Understand the context, purpose, and main ideas presented.
+   - For code, focus on understanding the logic, functions, and flow.
+
+2. **Identify Key Concepts and Relationships**:
+   - Highlight key concepts, entities, and their relationships. Look for nouns and verbs in text; for code, focus on variables, functions, and their interactions.
+   - Pay attention to how these concepts are interconnected.
+
+3. **List Down Facts**:
+   - Write down each fact as a simple, standalone statement. Ensure each fact captures a single, clear idea.
+   - Use plain language and avoid jargon or overly technical terms unless necessary.
+
+4. **Ensure Coverage and Completeness**:
+   - Ensure that the list of facts covers all significant points in the text or code. Avoid omitting critical details.
+   - Check that the facts collectively represent the entirety of the source material.
+
+5. **Simplicity and Modularity**:
+   - Each fact should be simple and self-contained. Avoid complex sentences that might combine multiple ideas or concepts.
+   - Aim for modularity, where each fact is independent and can be understood on its own.
+
+6. **Verification Against Source**:
+   - Cross-check each fact against the source material to ensure accuracy and context fidelity.
+   - Revise facts for clarity or completeness as needed.
+
+7. **Organize Facts Logically**:
+   - Arrange the facts in a logical order that reflects the structure of the source material.
+   - Group related facts to maintain coherence and flow of information.
+
+8. **Simplify Technical Details** (for code):
+   - Translate code logic and functionalities into simple factual statements.
+   - Avoid the intricacies of coding syntax; focus on the purpose and outcome of the code segments.
+
+#### Importance of the Process
+- **Comprehensive Coverage**: By covering the entirety of the text or code, the extracted facts present a complete picture, ensuring no critical information is overlooked.
+- **Simplicity and Clarity**: Simple and modular facts are more accessible and understandable, making the information more usable and easier to communicate.
+- **Accuracy and Fidelity**: Accurate representation of the source material maintains the integrity of the original content, ensuring that the essence is preserved.
+
+#### Conclusion
+This structured approach to extracting facts from text or code ensures that all relevant information is captured clearly and accurately. It allows for the distillation of complex material into an easily digestible format, making the information more approachable and useful for various applications.

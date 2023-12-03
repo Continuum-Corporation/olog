@@ -1,3 +1,5 @@
 *.sw*
 venv/
+__pycache__
 olog-out.json
+*.json
