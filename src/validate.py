@@ -3,31 +3,31 @@ import sys
 
 def validate_olog(olog_json):
     try:
-        olog = json.loads(olog_json)
-        
+        olog = json.loads(olog_json)["Olog"]
+
         # Validate Types
-        if "types" not in olog:
+        if "Types" not in olog:
             raise ValueError("Olog missing 'types'")
-        for type in olog["types"]:
-            if "id" not in type or "description" not in type:
+        for type in olog["Types"]:
+            if "ID" not in type or "Description" not in type:
                 raise ValueError("Each type must have 'id' and 'description'")
 
         # Validate Aspects
-        if "aspects" not in olog:
+        if "Aspects" not in olog:
             raise ValueError("Olog missing 'aspects'")
         aspect_dict = {}
-        for aspect in olog["aspects"]:
-            if not all(k in aspect for k in ("id", "source", "target", "description")):
-                raise ValueError("Each aspect must have 'id', 'source', 'target', and 'description'")
-            
-            if aspect["source"] not in [t["id"] for t in olog["types"]] or aspect["target"] not in [t["id"] for t in olog["types"]]:
+        for aspect in olog["Aspects"]:
+            if not all(k in aspect for k in ("ID", "Source", "Target", "Label")):
+                raise ValueError("Each aspect must have 'id', 'source', 'target', and 'label'")
+
+            if aspect["Source"] not in [t["ID"] for t in olog["Types"]] or aspect["Target"] not in [t["ID"] for t in olog["Types"]]:
                 raise ValueError("Aspect's source and target must be valid types")
 
-            aspect_dict[aspect["id"]] = aspect
+            aspect_dict[aspect["ID"]] = aspect
 
         # Validate Facts (Commutative Diagrams)
         if "facts" in olog:
-            for fact in olog["facts"]:
+            for fact in olog["Facts"]:
                 if "description" not in fact or "involvedAspects" not in fact or "commutative" not in fact:
                     raise ValueError("Each fact must have 'description', 'involvedAspects', and 'commutative'")
                 if not all(a in aspect_dict for a in fact["involvedAspects"]):
